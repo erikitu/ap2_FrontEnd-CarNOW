@@ -5,7 +5,7 @@ function Layout() {
   return (
     <div>
       <Navbar />
-      <Outlet /> {/* Renderiza o conteúdo específico da rota */}
+      <Outlet />
     </div>
   );
 }

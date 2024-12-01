@@ -1,15 +1,16 @@
 .navbar {
-    background-color: var(--primary-color);
+    background-color: white;
     color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px;
   }
-  
-  .navbar-logo {
-    font-size: 1.5rem;
-    font-weight: bold;
+
+  .navbar-logo img {
+    width: 10rem;
+    height: 5rem;
+    object-fit: contain;
   }
   
   .navbar-menu {
@@ -19,7 +20,7 @@
   }
   
   .navbar-menu li a {
-    color: white;
+    color: black;
     text-decoration: none;
     transition: color 0.3s ease;
   }
