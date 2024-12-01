@@ -1,7 +1,28 @@
-import { cars } from '../../data/carData';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import './CarList.css';
 
 function CarList() {
+  const [cars, setCars] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Chamada à API
+    axios.get('http://localhost:3000/listarVeiculos')
+      .then(response => {
+        setCars(response.data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Erro ao buscar os carros:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <p>Carregando...</p>;
+  }
+
   return (
     <div className="car-list container">
       <h1>Carros Disponíveis</h1>
@@ -14,10 +35,9 @@ function CarList() {
             <img src={carro.imagem} alt={`${carro.marca} ${carro.modelo}`} />
             <div className="car-info">
               <h2>{carro.marca} {carro.modelo}</h2>
-              <p>Ano: {carro.ano}</p>
-              <p>Valor diária: R$ {carro.valorDiaria},00</p>
-              <p>Combustível: {carro.combustivel}</p>
-              <p>Transmissão: {carro.transmissao}</p>
+              <p>Ano: {carro.ano_fabricacao}</p>
+              <p>Valor diária: R$ {carro.valor_diaria},00</p>
+              <p>Placa: {carro.placa}</p>
               <button 
                 disabled={!carro.disponivel}
                 className={carro.disponivel ? 'btn-alugar' : 'btn-indisponivel'}

@@ -7,8 +7,7 @@ export const cars = [
       valorDiaria: 100,
       disponivel: true,
       imagem: '/carros/corolla.jpg',
-      combustivel: 'Gasolina',
-      transmissao: 'Automático'
+      placa: 'ABC1D23'
     },
     {
       id: 2,
@@ -18,8 +17,7 @@ export const cars = [
       valorDiaria: 120,
       disponivel: true,
       imagem: '/carros/civic.jpg',
-      combustivel: 'Flex',
-      transmissao: 'Automático'
+      placa: 'XYZ9E87'
     },
     {
       id: 3,
@@ -29,8 +27,7 @@ export const cars = [
       valorDiaria: 80,
       disponivel: false,
       imagem: '/carros/gol.jpg',
-      combustivel: 'Gasolina',
-      transmissao: 'Manual'
+      placa: 'JKL5G65'
     }
   ];
   
