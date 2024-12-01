@@ -1,0 +1,45 @@
+.my-rent h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--primary-color);
+  }
+  
+  .sem-emprestimos {
+    text-align: center;
+    color: #7f8c8d;
+  }
+  
+  .rent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .rent-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .rent-info h2 {
+    margin-bottom: 10px;
+  }
+  
+  .status-badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .status-badge.ativo {
+    background-color: #2ecc71;
+    color: white;
+  }
+  
+  .status-badge.inativo {
+    background-color: #e74c3c;
+    color: white;
+  }
