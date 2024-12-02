@@ -28,3 +28,7 @@
   .navbar-menu li a:hover {
     color: var(--secondary-color);
   }
+
+  .navbar span {
+    color: var(--secondary-color)
+  }
