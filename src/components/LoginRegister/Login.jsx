@@ -31,8 +31,10 @@ function Login() {
       if (response.ok) {
         // Successful login
         localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('user', JSON.stringify(data.user)); // Store user data locally
+        localStorage.setItem('user', JSON.stringify(data.user));
+        window.dispatchEvent(new Event('Login')); 
         navigate('/');
+        
       } else {
         setError(data.error || 'Erro ao fazer login');
       }

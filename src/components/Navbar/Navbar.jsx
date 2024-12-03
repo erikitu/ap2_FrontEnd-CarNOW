@@ -8,13 +8,16 @@ function Navbar() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const loginStatus = localStorage.getItem('isLoggedIn');
-        setIsLoggedIn(loginStatus === 'true');
-
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user && user.nome) {
-            setUserName(user.nome);
+        window.addEventListener('Login', () => {
+            setIsLoggedIn(true)
+            const user = JSON.parse(localStorage.getItem('user'));
+            console.log(user[0][0])
+            if (user && user[0][0].nome) {
+            setUserName(user[0][0].nome);
         }
+    })
+
+
     }, []);
 
     const handleLogout = () => {
@@ -37,6 +40,7 @@ function Navbar() {
                         <li><Link to="/aluguel">Novo Empréstimo</Link></li>
                         <li><Link to="/meus-alugueis">Meus Empréstimos</Link></li>
                         <li><span className="navbar-username">Bem-vindo, {userName}</span></li>
+        
                     </>
                 )}
                 {!isLoggedIn ? (

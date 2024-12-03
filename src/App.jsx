@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Layout from './consts/layout';
+import Layout from './consts/Layout';
 import CarList from './pages/CarList/CarList';
 import RentForm from './pages/RentForm/RentForm';
 import MyRent from './pages/MyRent/MyRent';
