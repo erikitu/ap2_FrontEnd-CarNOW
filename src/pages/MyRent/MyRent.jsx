@@ -7,9 +7,10 @@ function MyRent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/emprestimos')
+    axios.get('http://localhost:3000/selectEmprestimo')
       .then(response => {
-        setEmprestimos(response.data.data); // Atualiza o estado com os dados de empréstimos
+        setEmprestimos(response.data.data);
+        console.log(response.data.data)
         setLoading(false);
       })
       .catch(error => {
