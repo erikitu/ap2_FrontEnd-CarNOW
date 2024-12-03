@@ -7,7 +7,6 @@ function CarList() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Chamada à API
     axios.get('http://localhost:3000/listarVeiculos')
       .then(response => {
         setCars(response.data);

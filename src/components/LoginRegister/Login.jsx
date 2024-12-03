@@ -20,21 +20,18 @@ function Login() {
     try {
       const response = await fetch('http://localhost:3000/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Successful login
+
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('user', JSON.stringify(data.user));
         window.dispatchEvent(new Event('Login')); 
         navigate('/');
-        
+
       } else {
         setError(data.error || 'Erro ao fazer login');
       }

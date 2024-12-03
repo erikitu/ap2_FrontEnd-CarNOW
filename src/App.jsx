@@ -7,13 +7,14 @@ import Login from './components/LoginRegister/Login';
 import Register from './components/LoginRegister/Register';
 import { ROUTES } from './consts/routes';
 import './index.css';
+import Home from './pages/Home/Home';
 
 function App() {
   const router = createBrowserRouter([
     {
       element: <Layout />,
       children: [
-        { path: ROUTES.HOME, element: <CarList /> },
+        { path: ROUTES.HOME, element: <Home /> },
         { path: ROUTES.CARROS, element: <CarList /> },
         { path: ROUTES.ALUGUEL, element: <RentForm /> },
         { path: ROUTES.MEUSALUGUEIS, element: <MyRent /> },
