@@ -15,8 +15,11 @@ function RentForm() {
 
   useEffect(() => {
     // Pega o clienteId do localStorage
-    const clienteId = JSON.parse(localStorage.getItem('user'))?.id || '';
+  
+    const clienteId = JSON.parse(localStorage.getItem('user'))[0][0]?.id;
     setFormData((prev) => ({ ...prev, clienteId }));
+    console.log(clienteId);
+  
 
     // Fetch veículos disponíveis
     const fetchVeiculos = async () => {
@@ -76,7 +79,7 @@ function RentForm() {
 
     try {
       // Enviar os dados para o backend
-      const response = await fetch('http://localhost:3000/emprestimos', {
+      const response = await fetch('http://localhost:3000/inserirEmprestimos', {
         method: 'POST',
         body: JSON.stringify({
           cliente_id: formData.clienteId,
@@ -89,17 +92,20 @@ function RentForm() {
           'Content-Type': 'application/json',
         },
       });
+      console.log(formData)
 
       if (response.ok) {
         alert('Empréstimo solicitado com sucesso!');
         // Atualizar o veículo para indisponível
-        await fetch(`http://localhost:3000/veiculos/${formData.veiculoId}`, {
+        const veiculoId = formData.veiculoId
+        await fetch(`http://localhost:3000/disponibilidadeVeiculo/${veiculoId}`, {
           method: 'PUT',
           body: JSON.stringify({ disponivel: false }),
           headers: {
-            'Content-Type': 'application/json',
+              'Content-Type': 'application/json',
           },
-        });
+      });
+      console.log(`http://localhost:3000/disponibilidadeVeiculo/${veiculoId}`);
       } else {
         alert('Erro ao solicitar o empréstimo. Tente novamente.');
       }
