@@ -13,33 +13,37 @@ function Login() {
     setError('');
 
     if (!email || !password) {
-      setError('Por favor, preencha todos os campos');
-      return;
+        setError('Por favor, preencha todos os campos');
+        return;
     }
 
     try {
-      const response = await fetch('http://localhost:3000/login', {
-        method: 'POST',
-        body: JSON.stringify({ email, password }),
-      });
+        const response = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (response.ok) {
-
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('user', JSON.stringify(data.user));
-        window.dispatchEvent(new Event('Login')); 
-        navigate('/');
-
-      } else {
-        setError(data.error || 'Erro ao fazer login');
-      }
+        if (response.ok) {
+            // Sucesso no login.
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('user', JSON.stringify(data.user));
+            window.dispatchEvent(new Event('Login')); 
+            navigate('/');
+        } else {
+            // Mostra o erro retornado pelo backend.
+            setError(data.error || 'Erro ao fazer login');
+        }
     } catch (err) {
-      console.error('Login error:', err);
-      setError('Erro ao fazer login. Tente novamente.');
+        console.error('Login error:', err);
+        setError('Erro ao fazer login. Tente novamente.');
     }
-  };
+};
+
 
   return (
     <div className="auth-container">

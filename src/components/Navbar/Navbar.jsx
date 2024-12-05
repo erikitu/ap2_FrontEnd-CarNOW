@@ -12,8 +12,8 @@ function Navbar() {
             setIsLoggedIn(true)
             const user = JSON.parse(localStorage.getItem('user'));
             console.log(user)
-            if (user && user.nome) {
-            setUserName(user.nome);
+            if (user && user[0][0].nome) {
+            setUserName(user[0][0].nome);
         }
     })
 
