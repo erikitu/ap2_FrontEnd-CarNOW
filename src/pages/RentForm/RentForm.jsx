@@ -173,7 +173,7 @@ function RentForm() {
           <button
             type="submit"
             className="btn-submit"
-            hidden={!isDateValid} // Desativa o botão se as datas forem inválidas
+            hidden={!isDateValid} 
             >
             Solicitar Empréstimo
           </button>
