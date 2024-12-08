@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Auth.css';
 
 function Login() {
@@ -13,37 +14,41 @@ function Login() {
     setError('');
 
     if (!email || !password) {
-        setError('Por favor, preencha todos os campos');
-        return;
+      setError('Por favor, preencha todos os campos');
+      return;
     }
 
     try {
-        const response = await fetch('http://localhost:3000/login', {
-            method: 'POST',
-            body: JSON.stringify({ email, password }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+      const response = await axios.post('http://localhost:3000/login', {
+        email,
+        password,
+      });
 
-        const data = await response.json();
+      // Sucesso no login
+      const data = response.data;
 
-        if (response.ok) {
-            // Sucesso no login.
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('user', JSON.stringify(data.user));
-            window.dispatchEvent(new Event('Login')); 
-            navigate('/');
-        } else {
-            // Mostra o erro retornado pelo backend.
-            setError(data.error || 'Erro ao fazer login');
-        }
+      if (response.status === 200) {
+        // Salva os dados do usuário no localStorage
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('user', JSON.stringify(data.user));
+
+        // Dispara um evento para notificar outros componentes
+        window.dispatchEvent(new Event('Login'));
+
+        // Redireciona para a página inicial
+        navigate('/');
+      }
     } catch (err) {
-        console.error('Login error:', err);
+      if (err.response) {
+        // Quando há uma resposta de erro do servidor
+        setError(err.response.data.error || 'Erro ao fazer login');
+      } else {
+        // Quando há erro de rede ou outro erro inesperado
         setError('Erro ao fazer login. Tente novamente.');
+      }
+      console.error('Login error:', err);
     }
-};
-
+  };
 
   return (
     <div className="auth-container">
@@ -53,22 +58,22 @@ function Login() {
         <form onSubmit={handleLogin}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input 
-              type="email" 
+            <input
+              type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required 
+              required
             />
           </div>
           <div className="form-group">
             <label htmlFor="password">Senha</label>
-            <input 
-              type="password" 
+            <input
+              type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required 
+              required
             />
           </div>
           <button type="submit" className="auth-button">Entrar</button>

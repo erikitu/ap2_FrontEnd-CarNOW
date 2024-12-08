@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
+import axios from 'axios';
 import './RentForm.css';
 
 function RentForm() {
@@ -15,18 +16,15 @@ function RentForm() {
 
   useEffect(() => {
     // Pega o clienteId do localStorage
-  
-    const clienteId = JSON.parse(localStorage.getItem('user'))[0][0]?.id;
+    const clienteId = JSON.parse(localStorage.getItem('user'))?.id;
     setFormData((prev) => ({ ...prev, clienteId }));
     console.log(clienteId);
-  
 
     // Fetch veículos disponíveis
     const fetchVeiculos = async () => {
       try {
-        const response = await fetch('http://localhost:3000/listarVeiculos');
-        const data = await response.json();
-        setVeiculos(data);
+        const response = await axios.get('http://localhost:3000/listarVeiculos');
+        setVeiculos(response.data);
       } catch (err) {
         console.error('Erro ao buscar veículos:', err);
         alert('Erro ao buscar veículos disponíveis. Tente novamente.');
@@ -79,36 +77,22 @@ function RentForm() {
 
     try {
       // Enviar os dados para o backend
-      const response = await fetch('http://localhost:3000/inserirEmprestimos', {
-        method: 'POST',
-        body: JSON.stringify({
-          cliente_id: formData.clienteId,
-          veiculo_id: formData.veiculoId,
-          data_emprestimo: formData.dataEmprestimo,
-          data_devolucao: formData.dataDevolucao,
-          valor_emprestimo: formData.valorEmprestimo,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      await axios.post('http://localhost:3000/inserirEmprestimos', {
+        cliente_id: formData.clienteId,
+        veiculo_id: formData.veiculoId,
+        data_emprestimo: formData.dataEmprestimo,
+        data_devolucao: formData.dataDevolucao,
+        valor_emprestimo: formData.valorEmprestimo,
       });
-      console.log(formData)
+      console.log(formData);
 
-      if (response.ok) {
-        alert('Empréstimo solicitado com sucesso!');
-        // Atualizar o veículo para indisponível
-        const veiculoId = formData.veiculoId
-        await fetch(`http://localhost:3000/disponibilidadeVeiculo/${veiculoId}`, {
-          method: 'PUT',
-          body: JSON.stringify({ disponivel: false }),
-          headers: {
-              'Content-Type': 'application/json',
-          },
+      // Atualizar o veículo para indisponível
+      const veiculoId = formData.veiculoId;
+      await axios.put(`http://localhost:3000/disponibilidadeVeiculo/${veiculoId}`, {
+        disponivel: false,
       });
-      console.log(`http://localhost:3000/disponibilidadeVeiculo/${veiculoId}`);
-      } else {
-        alert('Erro ao solicitar o empréstimo. Tente novamente.');
-      }
+
+      alert('Empréstimo solicitado com sucesso!');
     } catch (err) {
       console.error('Erro ao solicitar empréstimo:', err);
       alert('Erro ao processar a solicitação. Tente novamente.');
@@ -160,30 +144,25 @@ function RentForm() {
             </div>
           </div>
 
-
           <div className="form-group">
             <label>Valor do Empréstimo</label>
-            <input disabled
+            <input
               type="text"
               value={`R$ ${formData.valorEmprestimo.toFixed(2)}`}
               readOnly
-              />
+              disabled
+            />
           </div>
 
-          <button
-            type="submit"
-            className="btn-submit"
-            hidden={!isDateValid} 
-            >
+          <button type="submit" className="btn-submit" hidden={!isDateValid}>
             Solicitar Empréstimo
           </button>
 
-            {!isDateValid && (
-              <div className="error-message" style={{color: 'red'}}>
-                A data de início deve ser menor que a data de devolução.
-              </div>
-            )}
-
+          {!isDateValid && (
+            <div className="error-message" style={{ color: 'red' }}>
+              A data de início deve ser menor que a data de devolução.
+            </div>
+          )}
         </form>
       </div>
     </Fragment>

@@ -8,22 +8,40 @@ function Navbar() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        window.addEventListener('Login', () => {
-            setIsLoggedIn(true)
-            const user = JSON.parse(localStorage.getItem('user'));
-            console.log(user)
-            if (user && user[0][0].nome) {
-            setUserName(user[0][0].nome);
+        // Verifica o estado de login no localStorage ao montar o componente
+        const isUserLoggedIn = localStorage.getItem('isLoggedIn');
+        const user = localStorage.getItem('user');
+
+        if (isUserLoggedIn === 'true' && user) {
+            setIsLoggedIn(true);
+            const parsedUser = JSON.parse(user);
+            if (parsedUser && parsedUser.nome) {
+                setUserName(parsedUser.nome);
+            }
         }
-    })
 
+        // Atualiza o estado quando o evento "Login" é disparado
+        const handleLoginEvent = () => {
+            setIsLoggedIn(true);
+            const loggedInUser = JSON.parse(localStorage.getItem('user'));
+            if (loggedInUser && loggedInUser.nome) {
+                setUserName(loggedInUser.nome);
+            }
+        };
 
+        window.addEventListener('Login', handleLoginEvent);
+
+        return () => {
+            // Limpa o listener ao desmontar o componente
+            window.removeEventListener('Login', handleLoginEvent);
+        };
     }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('user');
         setIsLoggedIn(false);
+        setUserName('');
         navigate('/login');
     };
 
@@ -40,7 +58,6 @@ function Navbar() {
                         <li><Link to="/aluguel">Novo Empréstimo</Link></li>
                         <li><Link to="/meus-alugueis">Meus Empréstimos</Link></li>
                         <li><span className="navbar-username">Bem-vindo, {userName}</span></li>
-        
                     </>
                 )}
                 {!isLoggedIn ? (
