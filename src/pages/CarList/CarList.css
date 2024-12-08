@@ -1,7 +1,13 @@
+.car-list {
+  padding: 30px;
+  
+}
+
 .car-list h1 {
-    text-align: center;
-    margin-bottom: 30px;
-  }
+  text-align: center;
+  margin-bottom: 30px;
+  color: var(--primary-color)
+}
   
   .car-grid {
     display: grid;

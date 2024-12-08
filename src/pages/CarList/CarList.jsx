@@ -41,7 +41,7 @@ function CarList() {
                 disabled={!carro.disponivel}
                 className={carro.disponivel ? 'btn-alugar' : 'btn-indisponivel'}
               >
-                {carro.disponivel ? 'Alugar' : 'Indisponível'}
+                {carro.disponivel ? 'Disponivel' : 'Indisponível'}
               </button>
             </div>
           </div>

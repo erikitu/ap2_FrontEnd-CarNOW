@@ -59,11 +59,6 @@ function MyRent() {
               : emprestimo
           )
         );
-
-        // Salvar estado de devolução no localStorage
-        const devolvidos = JSON.parse(localStorage.getItem('devolvidos')) || {};
-        devolvidos[emprestimoId] = true;
-        localStorage.setItem('devolvidos', JSON.stringify(devolvidos));
       })
       .catch((error) => {
         console.error('Erro ao devolver o carro:', error);
@@ -81,36 +76,38 @@ function MyRent() {
         <p className="sem-emprestimos">Nenhum empréstimo encontrado</p>
       ) : (
         <div className="rent-list">
-          {emprestimos.map((emprestimo) => (
-            <div
-              key={emprestimo.id}
-              className={`rent-card ${emprestimo.devolvido ? 'devolvido' : ''}`}
-            >
-              <div className="rent-info">
-                <h2>
-                  {emprestimo.marca} {emprestimo.modelo}
-                </h2>
-                <p>Ano: {emprestimo.anoFabricacao}</p>
-                <p>Placa: {emprestimo.placa}</p>
-                <p>
-                  Período: {format(new Date(emprestimo.dataInicio), 'dd/MM/yyyy')} até{' '}
-                  {format(new Date(emprestimo.dataFim), 'dd/MM/yyyy')}
-                </p>
+          {emprestimos
+            .sort((a, b) => b.id - a.id) // Ordenação decrescente pelo ID
+            .map((emprestimo) => (
+              <div
+                key={emprestimo.id}
+                className={`rent-card ${emprestimo.devolvido ? 'devolvido' : ''}`}
+              >
+                <div className="rent-info">
+                  <h2>
+                    {emprestimo.marca} {emprestimo.modelo}
+                  </h2>
+                  <p>Ano: {emprestimo.anoFabricacao}</p>
+                  <p>Placa: {emprestimo.placa}</p>
+                  <p>
+                    Período: {format(new Date(emprestimo.dataInicio), 'dd/MM/yyyy')} até{' '}
+                    {format(new Date(emprestimo.dataFim), 'dd/MM/yyyy')}
+                  </p>
+                </div>
+                <div className="rent-actions">
+                  {emprestimo.devolvido ? (
+                    <p className="devolvido-msg">Empréstimo Encerrado</p>
+                  ) : (
+                    <button
+                      className="devolver-btn"
+                      onClick={() => devolverCarro(emprestimo.id, emprestimo.veiculo_id)}
+                    >
+                      Devolver o Carro
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="rent-actions">
-                {emprestimo.devolvido ? (
-                  <p className="devolvido-msg">Empréstimo Encerrado</p>
-                ) : (
-                  <button
-                    className="devolver-btn"
-                    onClick={() => devolverCarro(emprestimo.id, emprestimo.veiculo_id)}
-                  >
-                    Devolver o Carro
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       )}
     </div>
