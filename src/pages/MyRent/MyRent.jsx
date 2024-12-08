@@ -8,51 +8,64 @@ function MyRent() {
   const [loading, setLoading] = useState(true);
   const [clienteId, setClienteId] = useState();
 
+  // Carregar clienteId
   useEffect(() => {
-    // Obter o clienteId do localStorage ao montar o componente
     const user = JSON.parse(localStorage.getItem('user'));
-    if (Array.isArray(user) && Array.isArray(user[0]) && user[0][0]?.id) {
-      setClienteId(user[0][0].id); // Acesse diretamente o id
+    if (user?.id) {
+      setClienteId(user.id);
     } else {
       console.error('Cliente não está logado ou informações ausentes.');
       setLoading(false);
     }
-  }, []); // Executa apenas uma vez ao montar o componente
+  }, []);
 
+  // Carregar empréstimos do servidor
   useEffect(() => {
     if (!clienteId) return;
 
-    // Buscar empréstimos com o clienteId
     axios
       .get(`http://localhost:3000/listarEmprestimoID?cliente_id=${clienteId}`)
-      .then(response => {
-        setEmprestimos(response.data.data);
-        console.log(response.data.data);
+      .then((response) => {
+        const emprestimos = response.data.data;
+
+        // Restaurar o estado de devolução a partir do localStorage
+        const devolvidos = JSON.parse(localStorage.getItem('devolvidos')) || {};
+        const emprestimosAtualizados = emprestimos.map((emprestimo) => ({
+          ...emprestimo,
+          devolvido: devolvidos[emprestimo.id] || emprestimo.devolvido,
+        }));
+
+        setEmprestimos(emprestimosAtualizados);
         setLoading(false);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Erro ao buscar os empréstimos:', error);
         setLoading(false);
       });
-  }, [clienteId]); // Este efeito depende de clienteId
+  }, [clienteId]);
 
-  // Função para devolver o carro
-  const devolverCarro = (idVeiculo) => {
+  // Devolver carro
+  const devolverCarro = (emprestimoId, veiculoId) => {
     axios
-      .put(`http://localhost:3000/disponibilidadeVeiculo/${idVeiculo}`, { disponivel: true })
-      .then(response => {
-        console.log('Disponibilidade atualizada:', response.data);
-        
-        // Atualizar a lista de empréstimos e marcar como devolvido
-        setEmprestimos(prevEmprestimos => 
-          prevEmprestimos.map(emprestimo =>
-            emprestimo.id === idVeiculo
+      .put(`http://localhost:3000/devolverCarro`, { emprestimo_id: emprestimoId, veiculo_id: veiculoId })
+      .then((response) => {
+        console.log('Carro devolvido:', response.data);
+
+        // Atualizar estado local
+        setEmprestimos((prevEmprestimos) =>
+          prevEmprestimos.map((emprestimo) =>
+            emprestimo.id === emprestimoId
               ? { ...emprestimo, devolvido: true }
               : emprestimo
           )
         );
+
+        // Salvar estado de devolução no localStorage
+        const devolvidos = JSON.parse(localStorage.getItem('devolvidos')) || {};
+        devolvidos[emprestimoId] = true;
+        localStorage.setItem('devolvidos', JSON.stringify(devolvidos));
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Erro ao devolver o carro:', error);
       });
   };
@@ -68,9 +81,9 @@ function MyRent() {
         <p className="sem-emprestimos">Nenhum empréstimo encontrado</p>
       ) : (
         <div className="rent-list">
-          {emprestimos.map(emprestimo => (
-            <div 
-              key={emprestimo.id} 
+          {emprestimos.map((emprestimo) => (
+            <div
+              key={emprestimo.id}
               className={`rent-card ${emprestimo.devolvido ? 'devolvido' : ''}`}
             >
               <div className="rent-info">
@@ -79,15 +92,18 @@ function MyRent() {
                 </h2>
                 <p>Ano: {emprestimo.anoFabricacao}</p>
                 <p>Placa: {emprestimo.placa}</p>
-                <p>Período: {format(new Date(emprestimo.dataInicio), 'dd/MM/yyyy')} até {format(new Date(emprestimo.dataFim), 'dd/MM/yyyy')}</p>
+                <p>
+                  Período: {format(new Date(emprestimo.dataInicio), 'dd/MM/yyyy')} até{' '}
+                  {format(new Date(emprestimo.dataFim), 'dd/MM/yyyy')}
+                </p>
               </div>
               <div className="rent-actions">
                 {emprestimo.devolvido ? (
                   <p className="devolvido-msg">Empréstimo Encerrado</p>
                 ) : (
-                  <button 
+                  <button
                     className="devolver-btn"
-                    onClick={() => devolverCarro(emprestimo.id)}
+                    onClick={() => devolverCarro(emprestimo.id, emprestimo.veiculo_id)}
                   >
                     Devolver o Carro
                   </button>
@@ -102,4 +118,3 @@ function MyRent() {
 }
 
 export default MyRent;
-

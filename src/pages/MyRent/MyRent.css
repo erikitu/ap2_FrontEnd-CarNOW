@@ -1,63 +1,45 @@
-.my-rent h1 {
-  text-align: center;
-  margin-bottom: 30px;
-  color: var(--primary-color);
-}
-
-.sem-emprestimos {
-  text-align: center;
-  color: #7f8c8d;
+.my-rent.container {
+  padding: 20px;
 }
 
 .rent-list {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .rent-card {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  transition: background-color 0.3s ease;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  width: 300px;
 }
 
 .rent-card.devolvido {
-  background-color: #f4f4f4;
-  border-left: 5px solid #2ecc71; /* Cor verde para indicar devolução */
-}
-
-.rent-info h2 {
-  margin-bottom: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  color: #888;
 }
 
 .rent-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin-top: 10px;
 }
 
 .devolver-btn {
-  background-color: #3498db;
-  color: white;
+  background-color: #007bff;
+  color: #fff;
   border: none;
   padding: 10px 20px;
-  border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
 .devolver-btn:hover {
-  background-color: #2980b9;
+  background-color: #0056b3;
 }
 
 .devolvido-msg {
-  color: #2ecc71;
+  color: #155724;
   font-weight: bold;
-  margin-top: 10px;
 }
