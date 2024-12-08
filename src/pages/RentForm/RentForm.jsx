@@ -18,13 +18,16 @@ function RentForm() {
     // Pega o clienteId do localStorage
     const clienteId = JSON.parse(localStorage.getItem('user'))?.id;
     setFormData((prev) => ({ ...prev, clienteId }));
-    console.log(clienteId);
-
+  
     // Fetch veículos disponíveis
     const fetchVeiculos = async () => {
       try {
         const response = await axios.get('http://localhost:3000/listarVeiculos');
-        setVeiculos(response.data);
+  
+        // Filtra apenas veículos disponíveis
+        const veiculosDisponiveis = response.data.filter((veiculo) => veiculo.disponivel);
+  
+        setVeiculos(veiculosDisponiveis);
       } catch (err) {
         console.error('Erro ao buscar veículos:', err);
         alert('Erro ao buscar veículos disponíveis. Tente novamente.');
@@ -32,6 +35,7 @@ function RentForm() {
     };
     fetchVeiculos();
   }, []);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -104,23 +108,22 @@ function RentForm() {
       <div className="rent-form container">
         <h1>Solicitar Empréstimo</h1>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Selecione o Veículo</label>
-            <select
-              name="veiculoId"
-              value={formData.veiculoId}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Escolha um veículo</option>
-              {veiculos.map((veiculo) => (
-                <option key={veiculo.id} value={veiculo.id}>
-                  {veiculo.marca} {veiculo.modelo} - {veiculo.ano_fabricacao}
-                </option>
-              ))}
-            </select>
-          </div>
-
+        <div className="form-group">
+          <label>Selecione o Veículo</label>
+          <select
+            name="veiculoId"
+            value={formData.veiculoId}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Escolha um veículo</option>
+            {veiculos.map((veiculo) => (
+              <option key={veiculo.id} value={veiculo.id}>
+                {veiculo.marca} {veiculo.modelo} - {veiculo.ano_fabricacao}
+              </option>
+            ))}
+          </select>
+        </div>
           <div className="form-row">
             <div className="form-group">
               <label>Data Empréstimo</label>
